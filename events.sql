@@ -38,9 +38,9 @@ VALUES
   (4, "Modelise with ease",  2);
 
 INSERT INTO
-  tickets (id, type, event_id, quantity)
+  tickets (id, name, type, event_id, quantity)
 VALUES
-  (1, "FREE", 1, 10),
-  (2, "DONATION",2, 10),
-  (3, "PAID", 3, 10);
-  (4, "PAID", 4, 10);
+  (1,'FREE TICKET TO ALPHA DINNER', "FREE", 1, 10),
+  (2,'DONATION TICKET TO MEXICO SALES', "DONATION",2, 10),
+  (3,'Dancing with the stars paid ticket', "PAID", 3, 10);
+  (4, 'Ticket to the modelise with ease webinar',"PAID", 4, 10);
