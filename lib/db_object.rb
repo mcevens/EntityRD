@@ -49,31 +49,46 @@ class DBObject
   end
 
   def self.find(id)
-  results = DBConnection.execute(<<-SQL, id)
-    SELECT
-      #{table_name}.*
-    FROM
-      #{table_name}
-    WHERE
-      #{table_name}.id = ?
-  SQL
+    results = DBConnection.execute(<<-SQL, id)
+      SELECT
+        #{table_name}.*
+      FROM
+        #{table_name}
+      WHERE
+        #{table_name}.id = ?
+    SQL
 
-  parse_all(results).first
-end
+    parse_all(results).first
+  end
 
   def self.all
-  results = DBConnection.execute(<<-SQL)
-    SELECT
-      #{table_name}.*
-    FROM
-      #{table_name}
-  SQL
+    results = DBConnection.execute(<<-SQL)
+      SELECT
+        #{table_name}.*
+      FROM
+        #{table_name}
+    SQL
 
-  parse_all(results)
-end
+    parse_all(results)
+  end
 
-def self.parse_all(results)
-  results.map { |result| self.new(result) }
-end
+  def self.parse_all(results)
+    results.map { |result| self.new(result) }
+  end
+
+  def insert
+    columns = self.class.columns.drop(1)
+    col_names = columns.map(&:to_s).join(", ")
+    question_marks = (["?"] * columns.count).join(", ")
+
+    DBConnection.execute(<<-SQL, *attribute_values.drop(1))
+      INSERT INTO
+        #{self.class.table_name} (#{col_names})
+      VALUES
+        (#{question_marks})
+    SQL
+
+    self.id = DBConnection.last_insert_row_id
+  end
 
 end
